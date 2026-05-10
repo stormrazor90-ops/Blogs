@@ -16,7 +16,6 @@ const ACCENT  = "#D4A853";
 const ACCENT2 = "#C0392B";
 const BG_DARK = "#0C0C0A";
 const BG_CARD = "#141410";
-const BG_MID  = "#1A1A16";
 
 const PICSUM_IDS = [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200];
 
@@ -398,8 +397,6 @@ export default function Blog() {
   const [category, setCategory] = useState(location.state?.category || "");
   const [viewMode, setViewMode] = useState("grid");
 
-  const headerRef = useRef(null);
-
   /* Lenis smooth scroll */
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.3, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
@@ -425,8 +422,6 @@ export default function Blog() {
       if (sort === "oldest")   return new Date(a.date) - new Date(b.date);
       return new Date(b.date) - new Date(a.date);
     });
-
-  const isFiltering = search || category;
 
   /* gallery images — all posts */
   const galleryImages = posts.map((post, i) => ({

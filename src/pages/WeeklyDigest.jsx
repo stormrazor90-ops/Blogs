@@ -187,7 +187,6 @@ function UnsubscribeModal({ onClose, onConfirm }) {
 // ── main page ────────────────────────────────────────────────────────────────
 export default function WeeklyDigest() {
   const { posts }                           = usePosts();
-  const { user }                            = useAuth();
   const { activeCount, weekLabel, unsubscribe, isSubscribed } = useDigest();
   const { toast }                           = useToast();
   const [showUnsub, setShowUnsub]           = useState(false);

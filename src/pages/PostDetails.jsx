@@ -34,7 +34,6 @@ const stripHtml = (html) =>
 ───────────────────────────────────────────────────────────────────────────── */
 function generateSections(post) {
   const title   = post.title   || "Untitled";
-  const author  = post.author  || "Anonymous";
   const rawText = stripHtml(post.content || "");
   const excerpt = rawText.slice(0, 200) || "An exploration of ideas worth sharing.";
   const topic   = title.toLowerCase();

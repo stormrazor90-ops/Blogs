@@ -207,7 +207,7 @@ function GalleryScene({
     });
 
     const imageAdvance = totalImages > 0 ? visibleCount % totalImages || totalImages : 0;
-    const halfRange    = depthRange / 2;
+    // depthRange / 2 used for plane position offset in render below
 
     planesData.current.forEach((plane, i) => {
       let newZ = plane.z + scrollVelocity * delta * 10;

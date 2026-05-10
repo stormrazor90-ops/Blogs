@@ -17,6 +17,7 @@ export function slugify(title) {
 function uniqueSlug(base, existingPosts) {
   let slug = base;
   let n = 2;
+  // eslint-disable-next-line no-loop-func
   while (existingPosts.some((p) => p.slug === slug)) {
     slug = `${base}-${n++}`;
   }
