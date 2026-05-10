@@ -6,13 +6,16 @@ import reportWebVitals from './reportWebVitals';
 import { PostProvider } from "./context/PostContext";
 import { AuthProvider } from "./context/AuthContext";
 import { ToastProvider } from "./context/ToastContext";
+import { DigestProvider } from "./context/DigestContext";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthProvider>
     <ToastProvider>
       <PostProvider>
-        <App />
+        <DigestProvider>
+          <App />
+        </DigestProvider>
       </PostProvider>
     </ToastProvider>
   </AuthProvider>

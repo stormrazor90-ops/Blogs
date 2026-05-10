@@ -1,0 +1,8 @@
+on blog detail page as i click on any of these images of blogs 
+
+** Image 1 **
+
+..and also move this section to last ( before footer..
+
+** Image 2 **
+

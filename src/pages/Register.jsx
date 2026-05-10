@@ -18,11 +18,17 @@ export default function Register() {
 
   const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
 
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     if (!form.name || !form.email || !form.password) {
       setError("Please fill in all fields.");
+      return;
+    }
+    if (!isValidEmail(form.email)) {
+      setError("Please enter a valid email address.");
       return;
     }
     if (form.password.length < 6) {
