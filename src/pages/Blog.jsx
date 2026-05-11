@@ -4,7 +4,6 @@ import { usePosts } from "../context/PostContext";
 import { useAuth } from "../context/AuthContext";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "@studio-freight/lenis";
 import InfiniteGallery from "../components/InfiniteGallery";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -397,14 +396,36 @@ export default function Blog() {
   const [category, setCategory] = useState(location.state?.category || "");
   const [viewMode, setViewMode] = useState("grid");
 
-  /* Lenis smooth scroll */
+  /* GSAP smooth scroll — momentum-based via ticker + ScrollTrigger normalizeScroll */
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.3, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
-    lenis.on("scroll", ScrollTrigger.update);
-    const tick = (time) => lenis.raf(time * 1000);
-    gsap.ticker.add(tick);
+    ScrollTrigger.normalizeScroll(true);
     gsap.ticker.lagSmoothing(0);
-    return () => { lenis.destroy(); gsap.ticker.remove(tick); };
+
+    let currentY = window.scrollY;
+    let targetY  = window.scrollY;
+    const ease   = 0.08;
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      targetY = Math.max(0, Math.min(targetY + e.deltaY * 0.8, document.body.scrollHeight - window.innerHeight));
+    };
+
+    const tick = () => {
+      currentY += (targetY - currentY) * ease;
+      if (Math.abs(targetY - currentY) > 0.1) {
+        window.scrollTo(0, currentY);
+      }
+      ScrollTrigger.update();
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    gsap.ticker.add(tick);
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      gsap.ticker.remove(tick);
+      ScrollTrigger.normalizeScroll(false);
+    };
   }, []);
 
   const allCategories = [...new Set(posts.map((p) => p.category).filter(Boolean))].sort();

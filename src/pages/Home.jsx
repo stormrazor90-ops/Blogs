@@ -6,7 +6,6 @@ import { useDigest } from "../context/DigestContext";
 import { useToast } from "../context/ToastContext";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "@studio-freight/lenis";
 import { motion } from "motion/react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -1315,18 +1314,38 @@ export default function Home() {
   const { user }                                 = useAuth();
   const { subscribe, isSubscribed, activeCount } = useDigest();
 
-  /* Lenis smooth scroll */
+  /* GSAP smooth scroll — momentum-based via ticker + ScrollTrigger normalizeScroll */
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.3,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-    });
-    lenis.on("scroll", ScrollTrigger.update);
-    const tick = (time) => lenis.raf(time * 1000);
-    gsap.ticker.add(tick);
+    // Normalize scroll across devices and keep ScrollTrigger in sync
+    ScrollTrigger.normalizeScroll(true);
     gsap.ticker.lagSmoothing(0);
-    return () => { lenis.destroy(); gsap.ticker.remove(tick); };
+
+    // Smooth momentum scroll using GSAP ticker
+    let currentY = window.scrollY;
+    let targetY  = window.scrollY;
+    const ease   = 0.08; // lower = smoother/slower, higher = snappier
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      targetY = Math.max(0, Math.min(targetY + e.deltaY * 0.8, document.body.scrollHeight - window.innerHeight));
+    };
+
+    const tick = () => {
+      currentY += (targetY - currentY) * ease;
+      if (Math.abs(targetY - currentY) > 0.1) {
+        window.scrollTo(0, currentY);
+      }
+      ScrollTrigger.update();
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    gsap.ticker.add(tick);
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      gsap.ticker.remove(tick);
+      ScrollTrigger.normalizeScroll(false);
+    };
   }, []);
 
   return (
