@@ -103,11 +103,6 @@ body {
 /* ── Smooth image load ── */
 img { transition: opacity 0.3s ease; }
 
-/* ── Hide default cursor on desktop (custom cursor active) ── */
-@media (pointer: fine) {
-  *, *::before, *::after { cursor: none !important; }
-}
-
 /* ── 3D card preserve ── */
 .tilt-card { transform-style: preserve-3d; will-change: transform; }
 
