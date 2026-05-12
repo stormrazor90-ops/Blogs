@@ -114,7 +114,7 @@ function ForgotPasswordModal({ onClose }) {
 
 // ── Main Login Page ──────────────────────────────────────────────────────────
 export default function Login() {
-  const { login, user } = useAuth();
+  const { login, user, users } = useAuth();
   const { toast }       = useToast();
   const navigate        = useNavigate();
 
@@ -137,8 +137,18 @@ export default function Login() {
     if (!isValidEmail(email)) { setError("Please enter a valid email address."); return; }
     setLoading(true);
     setTimeout(() => {
-      const username = email.split("@")[0];
-      login({ username, email });
+      // Match against known users list for role assignment
+      const known = (users || []).find(
+        u => u.email === email || u.username === email.split("@")[0]
+      );
+      const username = known?.username || email.split("@")[0];
+      login({
+        username,
+        email,
+        name:   known?.name   || username,
+        role:   known?.role   || "reader",
+        avatar: known?.avatar || username[0].toUpperCase(),
+      });
       setLoading(false);
       toast(`Welcome back, ${username}!`, "success");
       navigate("/dashboard");
