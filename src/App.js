@@ -1,7 +1,6 @@
 // App.js
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import MagneticCursor from "./components/MagneticCursor";
 import Home from "./pages/Home";
 import Blog from "./pages/Blog";
 import Login from "./pages/Login";
@@ -17,8 +16,6 @@ import ContactUs from "./pages/ContactUs";
 function App() {
   return (
     <BrowserRouter>
-      {/* Custom cursor — active on every page */}
-      <MagneticCursor />
       <Navbar />
       <div>
         <Routes>
